@@ -22,6 +22,10 @@ module ActsAsTaggableArrayOn
           send("with_any_#{tag_name}", tags)
         end
 
+        scope :"#{tag_name}_does_not_contain", ->(*tags) do
+          send("without_any_#{tag_name}", tags)
+        end
+
         self.class.class_eval do
           define_method :"all_#{tag_name}" do |options = {}, &block|
             subquery_scope = unscoped.select("unnest(#{table_name}.#{tag_name}) as tag").distinct
